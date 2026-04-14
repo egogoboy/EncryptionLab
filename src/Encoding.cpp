@@ -20,7 +20,12 @@ QString encode(const QString& input_text, const QString& key) {
     result.reserve(input_text.size());
 
     for (QChar c : input_text) {
-        size_t idx = (get_char_idx(c) + key_value) % alphabet.size();
+        int idx =
+            (static_cast<int>(get_char_idx(c)) + key_value) % alphabet.size();
+
+        if (idx < 0) {
+            idx = static_cast<int>(alphabet.size()) + idx;
+        }
         result.push_back(alphabet.at(idx));
     }
 
@@ -33,9 +38,10 @@ QString decode(const QString& input_text, const QString& key) {
     result.reserve(input_text.size());
 
     for (QChar c : input_text) {
-        int idx = static_cast<int>(get_char_idx(c)) - key_value;
+        int idx =
+            (static_cast<int>(get_char_idx(c)) - key_value) % alphabet.size();
         if (idx < 0) {
-            idx = alphabet.size() - idx * -1 % alphabet.size();
+            idx = static_cast<int>(alphabet.size()) + idx;
         }
         result.push_back(alphabet.at(idx));
     }
