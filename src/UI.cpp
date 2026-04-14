@@ -219,8 +219,6 @@ void UI::init_menu_bar() {
     _encrypt_menu = menuBar()->addMenu(QObject::tr("Зашифровать"));
     _encrypt_menu->setEnabled(false);
 
-    // <choose_active_method>
-
     connect(_encrypt_menu->addAction("Маршрутная"), &QAction::triggered, this,
             &UI::show_not_implemented_warning);
     connect(_encrypt_menu->addAction("Вертикальная"), &QAction::triggered, this,
@@ -228,12 +226,10 @@ void UI::init_menu_bar() {
     connect(_encrypt_menu->addAction("Посимвольная"), &QAction::triggered, this,
             &UI::show_not_implemented_warning);
     connect(_encrypt_menu->addAction("Побитовая"), &QAction::triggered, this,
-            &UI::show_not_implemented_warning);
+            &UI::encode);
 
     _decrypt_menu = menuBar()->addMenu(QObject::tr("Расшифровать"));
     _decrypt_menu->setEnabled(false);
-
-    // <choose_active_method>
 
     connect(_decrypt_menu->addAction("Маршрутная"), &QAction::triggered, this,
             &UI::show_not_implemented_warning);
@@ -242,7 +238,7 @@ void UI::init_menu_bar() {
     connect(_decrypt_menu->addAction("Посимвольная"), &QAction::triggered, this,
             &UI::show_not_implemented_warning);
     connect(_decrypt_menu->addAction("Побитовая"), &QAction::triggered, this,
-            &UI::show_not_implemented_warning);
+            &UI::decode);
 
     _info_menu = menuBar()->addMenu(QObject::tr("Справка"));
     connect(_info_menu->addAction("О программе"), &QAction::triggered, this,
