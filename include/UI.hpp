@@ -62,9 +62,9 @@ class UI : public QMainWindow {
     std::stack<QString> _text_lines;
 
     const QString ABOUT_MESSAGE = R"(
-Шифрование методами подстановки
+Шифрование методами перестановки
 
-Шифрование моноалфавитным методом
+Шифрование <place_your_method> методом
 
-Судаков Е.Ю., ИПБ-23)";
+<place_your_full_name>, ИПБ-23)";
 };

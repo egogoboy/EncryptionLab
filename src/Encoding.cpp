@@ -4,50 +4,12 @@
 
 namespace algo {
 
-const QString alphabet = "_АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+// <place_your_realization_here>
 
-size_t get_char_idx(QChar c) { return alphabet.indexOf(c); }
+bool validate_key(const QString& key) { return true; }
 
-bool validate_key(const QString& key) {
-    bool ok = false;
-    key.toInt(&ok);
-    return ok;
-}
+QString encode(const QString& input_text, const QString& key) { return ""; }
 
-QString encode(const QString& input_text, const QString& key) {
-    QString result;
-    int key_value = key.toInt();
-    result.reserve(input_text.size());
-
-    for (QChar c : input_text) {
-        int idx =
-            (static_cast<int>(get_char_idx(c)) + key_value) % alphabet.size();
-
-        if (idx < 0) {
-            idx = static_cast<int>(alphabet.size()) + idx;
-        }
-        result.push_back(alphabet.at(idx));
-    }
-
-    return result;
-}
-
-QString decode(const QString& input_text, const QString& key) {
-    QString result;
-    int key_value = key.toInt();
-    result.reserve(input_text.size());
-
-    for (QChar c : input_text) {
-        int idx =
-            (static_cast<int>(get_char_idx(c)) - key_value) % alphabet.size();
-
-        if (idx < 0) {
-            idx = static_cast<int>(alphabet.size()) + idx;
-        }
-        result.push_back(alphabet.at(idx));
-    }
-
-    return result;
-}
+QString decode(const QString& input_text, const QString& key) { return ""; }
 
 };  // namespace algo

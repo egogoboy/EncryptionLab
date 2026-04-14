@@ -1,4 +1,4 @@
-# 3 лабораторная по Михайлову
+# 4 лабораторная по Михайлову
 
 Для того, чтобы поменять под себя необходимо:
 
@@ -14,8 +14,12 @@
     3. У некативных методов установить в `connect` функцию `&UI::show_not_implemented_warning`
         Пример:
         ```Cpp
-    connect(_encrypt_menu->addAction("Моноалфавитная"), &QAction::triggered,
+    connect(_encrypt_menu->addAction("Маршрутная"), &QAction::triggered,
             this, &UI::encode);
-    connect(_encrypt_menu->addAction("Гомофоническая"), &QAction::triggered,
+    connect(_encrypt_menu->addAction("Вертикальная"), &QAction::triggered,
             this, &UI::show_not_implemented_warning);
         ```
+
+## Где всё это менять
+
+Все места, где нужно что либо поменять, помечены тектом типа `<place_your_variant>`
