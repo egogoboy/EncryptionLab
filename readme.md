@@ -12,10 +12,12 @@
     1. Найти раздел с пунктами **Зашифровать** и **Расшифровать**
     2. Поменять в активном методе функцию в `connect` на `&UI::encode` или `&UI::decode` соответственно
     3. У некативных методов установить в `connect` функцию `&UI::show_not_implemented_warning`
-        Пример:
-        ```Cpp
+
+**Пример установки активного метода:**
+
+```Cpp
     connect(_encrypt_menu->addAction("Моноалфавитная"), &QAction::triggered,
             this, &UI::encode);
     connect(_encrypt_menu->addAction("Гомофоническая"), &QAction::triggered,
             this, &UI::show_not_implemented_warning);
-        ```
+```
