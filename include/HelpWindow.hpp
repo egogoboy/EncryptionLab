@@ -62,9 +62,9 @@ class HelpWindow : public QWidget {
 3. «Сохранить» - сохранение последней непустой строки в файл, доступна только при предварительном открытии файла;
 4. «Сохранить как» - сохранение последней строчки в новый файл.
 
-Описание <place_your_method> метода.
+Описание метода маршрутной табличной перестановки.
 
-При <place_your_method> перестановке <place_method_descrtiption>
+При шифровании маршрутной табличной перестановкой <place_method_descrtiption>
 
 <place_method_description_in_the_lines_below>
 
