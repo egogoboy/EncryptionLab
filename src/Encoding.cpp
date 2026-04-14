@@ -40,6 +40,7 @@ QString decode(const QString& input_text, const QString& key) {
     for (QChar c : input_text) {
         int idx =
             (static_cast<int>(get_char_idx(c)) - key_value) % alphabet.size();
+
         if (idx < 0) {
             idx = static_cast<int>(alphabet.size()) + idx;
         }
