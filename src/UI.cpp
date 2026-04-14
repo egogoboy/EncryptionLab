@@ -13,6 +13,7 @@
 
 UI::UI(size_t height, size_t width) : QMainWindow(nullptr) {
     resize(height, width);
+    setWindowTitle("Шифрование методами подстановки");
     _window = new QWidget(this);
     setCentralWidget(_window);
 
