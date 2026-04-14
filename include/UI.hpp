@@ -64,7 +64,7 @@ class UI : public QMainWindow {
     const QString ABOUT_MESSAGE = R"(
 Шифрование методами перестановки
 
-Шифрование <place_your_method> методом
+Шифрование методом маршрутной табличной перестановки
 
 <place_your_full_name>, ИПБ-23)";
 };
