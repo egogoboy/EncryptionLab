@@ -17,12 +17,16 @@ class UI : public QMainWindow {
     void show_not_implemented_warning();
     void show_about();
     void show_help();
+    void show_key_error();
+
     void encode();
     void decode();
+
     void open_file();
     void create_file();
     void save_file();
     void save_file_as();
+
     void on_workspace_changed();
     void on_key_received(const QString& key);
 
@@ -30,8 +34,8 @@ class UI : public QMainWindow {
     void init_menu_bar();
     void init_workspace();
     void init_ui();
+
     void reset_workspace();
-    void show_key_error();
 
     QFile _file;
 
@@ -47,8 +51,10 @@ class UI : public QMainWindow {
     QWidget* _window = nullptr;
     QLayout* _layout = nullptr;
 
-    HelpWindow* _help_window = nullptr;
+    std::unique_ptr<HelpWindow> _help_window = nullptr;
+
     WorkspaceTextEdit* _workspace = nullptr;
+
     KeyDialog* _key_dialog = nullptr;
 
     QString (*do_action)(const QString&, const QString&);

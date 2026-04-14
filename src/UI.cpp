@@ -16,7 +16,6 @@ UI::UI(size_t height, size_t width) : QMainWindow(nullptr) {
     _window = new QWidget(this);
     setCentralWidget(_window);
 
-    _help_window = new HelpWindow();
     init_ui();
 }
 
@@ -192,6 +191,8 @@ void UI::init_ui() {
     _key_dialog = new KeyDialog(_window);
     _key_dialog->setWindowFlag(Qt::WindowStaysOnTopHint);
     connect(_key_dialog, &KeyDialog::key_submitted, this, &UI::on_key_received);
+
+    _help_window = std::make_unique<HelpWindow>();
 }
 
 void UI::init_menu_bar() {
