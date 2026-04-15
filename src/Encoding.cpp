@@ -4,12 +4,13 @@
 #include <set>
 #include <vector>
 
+
 namespace algo {
 
 bool validate_key(const QString& key) {
     for (int i = 0; i < key.size(); i++) {
-        if (!key[i].isLetter()) {
-            return false;
+        if (!key[i].isLetter() && key[i] != '_') {
+        return false;
         }
     }
 
