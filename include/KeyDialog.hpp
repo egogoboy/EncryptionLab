@@ -13,6 +13,7 @@ class KeyDialog : public QDialog {
 
    signals:
     void key_submitted(const QString& key);
+    void closed();
 
    private slots:
     void on_submit();

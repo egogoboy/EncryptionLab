@@ -7,14 +7,14 @@
 
 KeyDialog::KeyDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Ключ");
-    setModal(false);
+    setModal(true);
 
     setWindowFlag(Qt::WindowCloseButtonHint);
 
     _input = new QLineEdit(this);
 
-    QRegExp rx("-?\\d+|[А-ИК-Я_]+");
-    _input->setValidator(new QRegExpValidator(rx, this));
+    // QRegExp rx("-?\\d+|[А-ИК-Я_]+");
+    // _input->setValidator(new QRegExpValidator(rx, this));
 
     auto* main_layout = new QVBoxLayout(this);
     main_layout->addWidget(_input);
@@ -42,4 +42,5 @@ void KeyDialog::on_submit() { emit key_submitted(_input->text()); }
 void KeyDialog::on_reject() {
     reset_input();
     close();
+    emit closed();
 }

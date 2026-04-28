@@ -1,6 +1,7 @@
 #include "UI.hpp"
 
 #include <QApplication>
+#include <QDebug>
 #include <QFileDialog>
 #include <QMenu>
 #include <QMenuBar>
@@ -10,6 +11,7 @@
 
 #include "Encoding.hpp"
 #include "KeyDialog.hpp"
+#include "menu/DropdownElement.hpp"
 
 UI::UI(size_t height, size_t width) : QMainWindow(nullptr) {
     resize(height, width);
@@ -33,6 +35,11 @@ void UI::show_not_implemented_warning() {
     warn->setEscapeButton(cancel_button);
 
     warn->show();
+
+    connect(warn, &QMessageBox::finished, this, [=]() {
+        _encrypt_menu->dropdown()->closeSelected();
+        _decrypt_menu->dropdown()->closeSelected();
+    });
 }
 
 void UI::show_about() {
@@ -45,6 +52,7 @@ void UI::show_help() {
 }
 
 void UI::encode() {
+    _encrypt_menu->dropdown()->setLocked(true);
     do_action = algo::encode;
     _key_dialog->show();
     _key_dialog->raise();
@@ -52,6 +60,7 @@ void UI::encode() {
 }
 
 void UI::decode() {
+    _decrypt_menu->dropdown()->setLocked(true);
     do_action = algo::decode;
     _key_dialog->show();
     _key_dialog->raise();
@@ -93,6 +102,12 @@ void UI::on_key_received(const QString& key) {
 
     _key_dialog->reset_input();
     _key_dialog->close();
+
+    _encrypt_menu->dropdown()->setLocked(false);
+    _decrypt_menu->dropdown()->setLocked(false);
+
+    _encrypt_menu->dropdown()->closePanel();
+    _decrypt_menu->dropdown()->closePanel();
 }
 
 void UI::show_key_error() {
@@ -126,6 +141,11 @@ void UI::open_file() {
 
     reset_workspace();
     _workspace->setText(input_text);
+
+    QTextCursor cursor = _workspace->textCursor();
+    cursor.movePosition(QTextCursor::EndOfLine);
+    _workspace->setTextCursor(cursor);
+
     _save_action->setEnabled(true);
     _file.close();
 
@@ -186,81 +206,98 @@ void UI::reset_workspace() {
 }
 
 void UI::init_ui() {
-    init_menu_bar();
-    init_workspace();
+    _layout = new QVBoxLayout(_window);
+    _layout->setAlignment(Qt::AlignTop);
+    _window->setLayout(_layout);
+    _layout->setContentsMargins(0, 0, 0, 0);
+    _layout->setSpacing(0);
+
+    _layout->addWidget(init_menu_bar());
+    _workspace = init_workspace();
+    _layout->addWidget(_workspace);
 
     _key_dialog = new KeyDialog(_window);
     _key_dialog->setWindowFlag(Qt::WindowStaysOnTopHint);
     connect(_key_dialog, &KeyDialog::key_submitted, this, &UI::on_key_received);
 
+    connect(_key_dialog, &KeyDialog::finished, this, [=]() {
+        _encrypt_menu->dropdown()->setLocked(false);
+        _decrypt_menu->dropdown()->setLocked(false);
+    });
+
     _help_window = std::make_unique<HelpWindow>();
 }
 
-void UI::init_menu_bar() {
-    menuBar()->setNativeMenuBar(false);
+TopBarElement* UI::init_menu_bar() {
+    TopBarElement* top_bar = new TopBarElement(this);
 
-    _file_menu = menuBar()->addMenu(QObject::tr("Файл"));
-    connect(_file_menu->addAction("Создать"), &QAction::triggered, this,
+    _file_menu = top_bar->addItem("Файл");
+
+    connect(_file_menu->addItem("Создать"), &QPushButton::clicked, this,
             &UI::create_file);
-    connect(_file_menu->addAction("Открыть"), &QAction::triggered, this,
+    connect(_file_menu->addItem("Открыть"), &QPushButton::clicked, this,
             &UI::open_file);
 
-    _save_action = _file_menu->addAction("Сохранить");
+    _save_action = _file_menu->addItem("Сохранить");
     _save_action->setEnabled(false);
 
-    connect(_save_action, &QAction::triggered, this, &UI::save_file);
-    connect(_file_menu->addAction("Сохранить как"), &QAction::triggered, this,
+    connect(_save_action, &QPushButton::clicked, this, &UI::save_file);
+    connect(_file_menu->addItem("Сохранить как"), &QPushButton::clicked, this,
             &UI::save_file_as);
 
-    _file_menu->addSeparator();
-    connect(_file_menu->addAction("Выход"), &QAction::triggered, this,
+    _file_menu->dropdown()->addSeparator();
+    connect(_file_menu->addItem("Выход"), &QPushButton::clicked, this,
             &QApplication::quit);
 
-    _encrypt_menu = menuBar()->addMenu(QObject::tr("Зашифровать"));
+    _encrypt_menu = top_bar->addItem("Зашифровать");
     _encrypt_menu->setEnabled(false);
+    _encrypt_menu->dropdown()->setCloseOnChoice(false);
+    // _encrypt_menu->dropdown()->setSelectable(true);
 
-    connect(_encrypt_menu->addAction("Маршрутная"), &QAction::triggered, this,
+    connect(_encrypt_menu->addItem("Маршрутная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
-    connect(_encrypt_menu->addAction("Вертикальная"), &QAction::triggered, this,
+    connect(_encrypt_menu->addItem("Вертикальная"), &QPushButton::clicked, this,
             &UI::encode);
-    connect(_encrypt_menu->addAction("Посимвольная"), &QAction::triggered, this,
+    connect(_encrypt_menu->addItem("Посимвольная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
-    connect(_encrypt_menu->addAction("Побитовая"), &QAction::triggered, this,
+    connect(_encrypt_menu->addItem("Побитовая"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
 
-    _decrypt_menu = menuBar()->addMenu(QObject::tr("Расшифровать"));
+    _decrypt_menu = top_bar->addItem("Расшифровать");
     _decrypt_menu->setEnabled(false);
+    _decrypt_menu->dropdown()->setCloseOnChoice(false);
+    // _decrypt_menu->dropdown()->setSelectable(true);
 
-    connect(_decrypt_menu->addAction("Маршрутная"), &QAction::triggered, this,
+    connect(_decrypt_menu->addItem("Маршрутная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
-    connect(_decrypt_menu->addAction("Вертикальная"), &QAction::triggered, this,
+    connect(_decrypt_menu->addItem("Вертикальная"), &QPushButton::clicked, this,
             &UI::decode);
-    connect(_decrypt_menu->addAction("Посимвольная"), &QAction::triggered, this,
+    connect(_decrypt_menu->addItem("Посимвольная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
-    connect(_decrypt_menu->addAction("Побитовая"), &QAction::triggered, this,
+    connect(_decrypt_menu->addItem("Побитовая"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
 
-    _info_menu = menuBar()->addMenu(QObject::tr("Справка"));
-    connect(_info_menu->addAction("О программе"), &QAction::triggered, this,
+    _info_menu = top_bar->addItem("Справка");
+
+    connect(_info_menu->addItem("О программе"), &QPushButton::clicked, this,
             &UI::show_about);
 
-    _show_help_action = _info_menu->addAction("Помощь");
+    _show_help_action = _info_menu->addItem("Помощь");
     _show_help_action->setEnabled(false);
-    connect(_show_help_action, &QAction::triggered, this, &UI::show_help);
+    connect(_show_help_action, &QPushButton::clicked, this, &UI::show_help);
 
-    connect(menuBar()->addAction(QObject::tr("Выход")), &QAction::triggered,
-            this, &QApplication::quit);
+    MenuButton* exit_btn = top_bar->addButton("Выход");
+    connect(exit_btn, &QPushButton::clicked, this, &QApplication::quit);
+
+    return top_bar;
 }
 
-void UI::init_workspace() {
-    _layout = new QHBoxLayout(_window);
-    _window->setLayout(_layout);
-
-    _workspace = new WorkspaceTextEdit(_window);
-    _workspace->setReadOnly(true);
-    _workspace->setVisible(false);
-    connect(_workspace, &QTextEdit::textChanged, this,
+WorkspaceTextEdit* UI::init_workspace() {
+    WorkspaceTextEdit* workspace = new WorkspaceTextEdit(_window);
+    workspace->setReadOnly(true);
+    workspace->setVisible(false);
+    connect(workspace, &QTextEdit::textChanged, this,
             &UI::on_workspace_changed);
 
-    _layout->addWidget(_workspace);
+    return workspace;
 }
