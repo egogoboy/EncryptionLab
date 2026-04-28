@@ -7,7 +7,7 @@
 
 KeyDialog::KeyDialog(QWidget* parent) : QDialog(parent) {
     setWindowTitle("Ключ");
-    setModal(false);
+    setModal(true);
 
     setWindowFlag(Qt::WindowCloseButtonHint);
 
@@ -42,4 +42,5 @@ void KeyDialog::on_submit() { emit key_submitted(_input->text()); }
 void KeyDialog::on_reject() {
     reset_input();
     close();
+    emit closed();
 }

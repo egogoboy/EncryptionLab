@@ -8,6 +8,9 @@
 #include "HelpWindow.hpp"
 #include "KeyDialog.hpp"
 #include "WorkspaceTextEdit.hpp"
+#include "menu/MenuButton.hpp"
+#include "menu/MenuItem.hpp"
+#include "menu/TopBarMenu.hpp"
 
 class UI : public QMainWindow {
    public:
@@ -31,25 +34,25 @@ class UI : public QMainWindow {
     void on_key_received(const QString& key);
 
    private:
-    void init_menu_bar();
-    void init_workspace();
+    TopBarElement* init_menu_bar();
+    WorkspaceTextEdit* init_workspace();
     void init_ui();
 
     void reset_workspace();
 
     QFile _file;
 
-    QMenu* _file_menu = nullptr;
-    QMenu* _encrypt_menu = nullptr;
-    QMenu* _decrypt_menu = nullptr;
-    QMenu* _info_menu = nullptr;
+    MenuItem* _file_menu = nullptr;
+    MenuItem* _encrypt_menu = nullptr;
+    MenuItem* _decrypt_menu = nullptr;
+    MenuItem* _info_menu = nullptr;
 
-    QAction* _save_action = nullptr;
-    QAction* _show_help_action = nullptr;
-    QAction* _exit_action = nullptr;
+    QPushButton* _save_action = nullptr;
+    QPushButton* _show_help_action = nullptr;
+    MenuButton* _exit_action = nullptr;
 
     QWidget* _window = nullptr;
-    QLayout* _layout = nullptr;
+    QVBoxLayout* _layout = nullptr;
 
     std::unique_ptr<HelpWindow> _help_window = nullptr;
 
