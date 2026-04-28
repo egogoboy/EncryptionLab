@@ -13,8 +13,8 @@ KeyDialog::KeyDialog(QWidget* parent) : QDialog(parent) {
 
     _input = new QLineEdit(this);
 
-    QRegExp rx("-?\\d+|[А-ИК-Я_]+");
-    _input->setValidator(new QRegExpValidator(rx, this));
+    // QRegExp rx("-?\\d+|[А-ИК-Я_]+");
+    // _input->setValidator(new QRegExpValidator(rx, this));
 
     auto* main_layout = new QVBoxLayout(this);
     main_layout->addWidget(_input);
