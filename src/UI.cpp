@@ -255,7 +255,7 @@ TopBarElement* UI::init_menu_bar() {
     // _encrypt_menu->dropdown()->setSelectable(true);
 
     connect(_encrypt_menu->addItem("Маршрутная"), &QPushButton::clicked, this,
-            &UI::encode);
+            &UI::show_not_implemented_warning);
     connect(_encrypt_menu->addItem("Вертикальная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
     connect(_encrypt_menu->addItem("Посимвольная"), &QPushButton::clicked, this,
@@ -269,7 +269,7 @@ TopBarElement* UI::init_menu_bar() {
     // _decrypt_menu->dropdown()->setSelectable(true);
 
     connect(_decrypt_menu->addItem("Маршрутная"), &QPushButton::clicked, this,
-            &UI::decode);
+            &UI::show_not_implemented_warning);
     connect(_decrypt_menu->addItem("Вертикальная"), &QPushButton::clicked, this,
             &UI::show_not_implemented_warning);
     connect(_decrypt_menu->addItem("Посимвольная"), &QPushButton::clicked, this,
