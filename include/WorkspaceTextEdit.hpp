@@ -14,8 +14,25 @@ class WorkspaceTextEdit : public QTextEdit {
             return;
         }
 
-        if (event->text().contains(QRegExp("[^А-ИК-Я_\b]")) ||
+        if (event->text().contains(QRegExp("[^А-ИК-Яа-ик-я_ \b]")) ||
             toPlainText().size() >= 30) {
+            return;
+        }
+
+        if (event->key() == Qt::Key_Space) {
+            QKeyEvent* new_event = new QKeyEvent(
+                QEvent::KeyPress, Qt::Key_Underscore, event->modifiers(), "_");
+
+            QTextEdit::keyPressEvent(new_event);
+            return;
+        }
+
+        if (event->text().contains(QRegExp("[а-ик-я]"))) {
+            QKeyEvent* new_event =
+                new QKeyEvent(QEvent::KeyPress, event->key(),
+                              event->modifiers(), event->text().toUpper());
+
+            QTextEdit::keyPressEvent(new_event);
             return;
         }
 
