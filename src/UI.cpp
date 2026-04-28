@@ -47,6 +47,7 @@ void UI::show_about() {
 }
 
 void UI::show_help() {
+    _help_window->move(x() + 20, y() + 20);
     _help_window->show();
     _help_window->activateWindow();
 }
@@ -82,7 +83,6 @@ void UI::on_workspace_changed() {
 void UI::on_key_received(const QString& key) {
     if (!algo::validate_key(key)) {
         show_key_error();
-        _key_dialog->reset_input();
         return;
     }
 
@@ -116,8 +116,12 @@ void UI::show_key_error() {
     err->setIcon(QMessageBox::Critical);
     err->setWindowTitle("");
     err->setText("Значение ключа неправильное");
+    err->move(_key_dialog->x() + 20, _key_dialog->y() + 20);
 
     err->setWindowModality(Qt::ApplicationModal);
+
+    connect(err, &QMessageBox::finished, this,
+            [=]() { _key_dialog->reset_input(); });
     err->show();
 }
 
